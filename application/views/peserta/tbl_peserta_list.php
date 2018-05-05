@@ -74,8 +74,8 @@
 				echo anchor(site_url('peserta/read/'.$peserta->id_peserta),'<i class="fa fa-eye" aria-hidden="true"></i>','class="btn btn-danger btn-sm"'); 
 				echo '  '; 
 				echo anchor(site_url('peserta/update/'.$peserta->id_peserta),'<i class="fa fa-pencil-square-o" aria-hidden="true"></i>','class="btn btn-danger btn-sm"'); 
-				echo '  '; 
-				echo anchor(site_url('peserta/delete/'.$peserta->id_peserta),'<i class="fa fa-trash-o" aria-hidden="true"></i>','class="btn btn-danger btn-sm" Delete','onclick="javasciprt: return confirm(\'Are You Sure ?\')"'); 
+                echo '  '; 
+                echo anchor(site_url('peserta/delete/'.$peserta->id_peserta),'<i class="fa fa-trash-o" aria-hidden="true"></i>',array('class'=>'btn btn-danger btn-sm', 'onclick'=>"javasciprt: return confirm('Are You Sure ?')"));
 				?>
 			</td>
 		</tr>
