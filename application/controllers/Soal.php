@@ -15,30 +15,40 @@ class Soal extends CI_Controller
     }
 
     public function online(){
-        $a = 11;
-        $c = 5;
-        $jumlah= $this->Soal_model->get_all();
-        $m = $this->db->query("SELECT * FROM tbl_soal ORDER BY id_soal LIMIT 1 ")->row_array();
-        echo (string)$m;exit;
-        if ($jumlah) {
-            $uji = array();
-            $no = 1;
-                foreach ($jumlah as $jum) {
-                    $z0 = rand(1, 24);
-                    $xn = ($a * $z0 + $c) % $m; 
-                    if ($xn <= 0) {
-                        $xn = $m;
-                    }
-                     
-                    $data = $this->db->query(" SELECT * FROM tbl_soal WHERE id_soal ='$xn' ")->result();
-                    foreach ($data as $da) {
-                        // var_dump($xn); exit;
-                        echo "<pre>";
-                        echo $no++ .'.'.$da->pertanyaan. ' id.'. $da->id_soal;
-                        echo "</pre>";
-                    }
-                }
+        $jum_soal = $this->db->query(" SELECT * FROM tbl_soal ORDER BY id_soal ASC LIMIT 5  ")->result();
+        $m = '';
+        $min = '';
+        $jumlah = $this->db->query("SELECT * FROM tbl_soal ORDER BY id_soal DESC LIMIT 1  ")->result_array();
+        foreach ($jumlah as $key) {
+            $m = $key['id_soal'];
         }
+        $jumlah = $this->db->query("SELECT * FROM tbl_soal ORDER BY id_soal ASC LIMIT 1  ")->result_array();
+        foreach ($jumlah as $key) {
+            $min = $key['id_soal'];
+        }
+
+        $a = 11;
+        $c = 7;
+        $xn = '';
+        
+        for ($i=1; $i <= count($jum_soal); $i++) { 
+            $z0 = random_int($min, $m);
+            $xn = ($a * $z0 + $c) % $m; 
+        
+            if ($xn < $min) {
+                $xn = $m;
+            }
+            $data = $this->db->query(" SELECT * FROM tbl_soal WHERE id_soal ='$xn' ")->result();
+            foreach ($data as $soal) {
+                
+                echo "<pre>";
+                echo $i .'.'.$soal->pertanyaan. ' id.'. $soal->id_soal;
+                echo "</pre>";
+            }
+        }
+
+        
+
        // $this->template->load('template','soal_peserta/soal', $data);
     }
 
