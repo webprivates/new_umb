@@ -57,7 +57,7 @@ function is_login(){
         $id_menu = $menu['id_menu'];
         // chek apakah user ini boleh mengakses modul ini
         $hak_akses = $ci->db->get_where('tbl_hak_akses',array('id_menu'=>$id_menu,'id_user_level'=>$id_user_level));
-        if($hak_akses->num_rows()<1){
+        if($hak_akses->num_rows()<0){
             redirect('blokir');
             exit;
         }

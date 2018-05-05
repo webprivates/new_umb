@@ -18,22 +18,23 @@ class Soal extends CI_Controller
         $a = 11;
         $c = 5;
         $jumlah= $this->Soal_model->get_all();
-        $m = count($jumlah);
+        $m = $this->db->query("SELECT * FROM tbl_soal ORDER BY id_soal LIMIT 1 ")->row_array();
+        echo (string)$m;exit;
         if ($jumlah) {
             $uji = array();
             $no = 1;
                 foreach ($jumlah as $jum) {
-                    $z0 = rand(1,$jum->id_soal);
+                    $z0 = rand(1, 24);
                     $xn = ($a * $z0 + $c) % $m; 
                     if ($xn <= 0) {
                         $xn = $m;
                     }
-                
+                     
                     $data = $this->db->query(" SELECT * FROM tbl_soal WHERE id_soal ='$xn' ")->result();
-                    
                     foreach ($data as $da) {
+                        // var_dump($xn); exit;
                         echo "<pre>";
-                        echo $no++ .'.'.$da->pertanyaan;
+                        echo $no++ .'.'.$da->pertanyaan. ' id.'. $da->id_soal;
                         echo "</pre>";
                     }
                 }
@@ -77,16 +78,16 @@ class Soal extends CI_Controller
         $row = $this->Soal_model->get_by_id($id);
         if ($row) {
             $data = array(
-		'id_soal' => $row->id_soal,
-		'id_matauji' => $row->id_matauji,
-		'pertanyaan' => $row->pertanyaan,
-		'pilihan_a' => $row->pilihan_a,
-		'pilihan_b' => $row->pilihan_b,
-		'pilihan_c' => $row->pilihan_c,
-		'pilihan_d' => $row->pilihan_d,
-		'pilihan_e' => $row->pilihan_e,
-        'jawaban' => $row->jawaban,
-	    );
+                        'id_soal' => $row->id_soal,
+                        'id_matauji' => $row->id_matauji,
+                        'pertanyaan' => $row->pertanyaan,
+                        'pilihan_a' => $row->pilihan_a,
+                        'pilihan_b' => $row->pilihan_b,
+                        'pilihan_c' => $row->pilihan_c,
+                        'pilihan_d' => $row->pilihan_d,
+                        'pilihan_e' => $row->pilihan_e,
+                        'jawaban' => $row->jawaban,
+                        );
             $this->template->load('template','soal/tbl_soal_read', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
@@ -100,16 +101,16 @@ class Soal extends CI_Controller
             'button' => 'Create',
             'matauji_data' => $this->Matauji_model->get_all(),
             'action' => site_url('soal/create_action'),
-	    'id_soal' => set_value('id_soal'),
-	    'id_matauji' => set_value('id_matauji'),
-	    'pertanyaan' => set_value('pertanyaan'),
-	    'pilihan_a' => set_value('pilihan_a'),
-	    'pilihan_b' => set_value('pilihan_b'),
-	    'pilihan_c' => set_value('pilihan_c'),
-	    'pilihan_d' => set_value('pilihan_d'),
-	    'pilihan_e' => set_value('pilihan_e'),
-        'jawaban' => set_value('jawaban'),
-	);
+            'id_soal' => set_value('id_soal'),
+            'id_matauji' => set_value('id_matauji'),
+            'pertanyaan' => set_value('pertanyaan'),
+            'pilihan_a' => set_value('pilihan_a'),
+            'pilihan_b' => set_value('pilihan_b'),
+            'pilihan_c' => set_value('pilihan_c'),
+            'pilihan_d' => set_value('pilihan_d'),
+            'pilihan_e' => set_value('pilihan_e'),
+            'jawaban' => set_value('jawaban'),
+        );
         $this->template->load('template','soal/tbl_soal_form', $data);
     }
     
@@ -121,15 +122,15 @@ class Soal extends CI_Controller
             $this->create();
         } else {
             $data = array(
-		'id_matauji' => $this->input->post('id_matauji',TRUE),
-		'pertanyaan' => $this->input->post('pertanyaan',TRUE),
-		'pilihan_a' => $this->input->post('pilihan_a',TRUE),
-		'pilihan_b' => $this->input->post('pilihan_b',TRUE),
-		'pilihan_c' => $this->input->post('pilihan_c',TRUE),
-		'pilihan_d' => $this->input->post('pilihan_d',TRUE),
-        'pilihan_e' => $this->input->post('pilihan_e',TRUE),
-		'jawaban' => $this->input->post('jawaban',TRUE),
-	    );
+                        'id_matauji' => $this->input->post('id_matauji',TRUE),
+                        'pertanyaan' => $this->input->post('pertanyaan',TRUE),
+                        'pilihan_a' => $this->input->post('pilihan_a',TRUE),
+                        'pilihan_b' => $this->input->post('pilihan_b',TRUE),
+                        'pilihan_c' => $this->input->post('pilihan_c',TRUE),
+                        'pilihan_d' => $this->input->post('pilihan_d',TRUE),
+                        'pilihan_e' => $this->input->post('pilihan_e',TRUE),
+                        'jawaban' => $this->input->post('jawaban',TRUE),
+                        );
 
             $this->Soal_model->insert($data);
             $this->session->set_flashdata('message', 'Create Record Success 2');
@@ -171,15 +172,15 @@ class Soal extends CI_Controller
             $this->update($this->input->post('id_soal', TRUE));
         } else {
             $data = array(
-		'id_matauji' => $this->input->post('id_matauji',TRUE),
-		'pertanyaan' => $this->input->post('pertanyaan',TRUE),
-		'pilihan_a' => $this->input->post('pilihan_a',TRUE),
-		'pilihan_b' => $this->input->post('pilihan_b',TRUE),
-		'pilihan_c' => $this->input->post('pilihan_c',TRUE),
-		'pilihan_d' => $this->input->post('pilihan_d',TRUE),
-        'pilihan_e' => $this->input->post('pilihan_e',TRUE),
-		'jawaban' => $this->input->post('jawaban',TRUE),
-	    );
+                        'id_matauji' => $this->input->post('id_matauji',TRUE),
+                        'pertanyaan' => $this->input->post('pertanyaan',TRUE),
+                        'pilihan_a' => $this->input->post('pilihan_a',TRUE),
+                        'pilihan_b' => $this->input->post('pilihan_b',TRUE),
+                        'pilihan_c' => $this->input->post('pilihan_c',TRUE),
+                        'pilihan_d' => $this->input->post('pilihan_d',TRUE),
+                        'pilihan_e' => $this->input->post('pilihan_e',TRUE),
+                        'jawaban' => $this->input->post('jawaban',TRUE),
+                        );
 
             $this->Soal_model->update($this->input->post('id_soal', TRUE), $data);
             $this->session->set_flashdata('message', 'Update Record Success');
