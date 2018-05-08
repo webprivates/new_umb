@@ -5,26 +5,34 @@
                 <div class="box box-warning box-solid">
     
                     <div class="box-header">
-                        <h3 class="box-title">KELOLA DATA SOAL</h3>
+                        <h3 class="box-title">SOAL UJIAN</h3>
                     </div>
 
                     <div class="box-body">
                         <div class="row">
                             <div class="col-md-12">
-                                <?php $no = 1; foreach($soal as $soal) : ?>
-                                    
+                              <div class="container">
+                                <?php echo form_open(site_url().'/soal/cekJawaban') ?>
+                                <?php $no = 1; foreach($soal as $soal) : ?>   
                                     <?php echo $no++ .'.'. $soal->pertanyaan ?><br>
                                     <div class="form-group">
-                                        <div class="radio">
-                                         <input type="radio" name="jawaban[$no]" value="<?php echo $soal->pilihan_a ?> " ><?php echo $soal->pilihan_a ?><br>
-                                         <input type="radio" name="jawaban[$no]" value="<?php echo $soal->pilihan_b ?> " ><?php echo $soal->pilihan_a ?><br>
-                                         <input type="radio" name="jawaban[$no]" value="<?php echo $soal->pilihan_c ?> " ><?php echo $soal->pilihan_a ?><br>
-                                         <input type="radio" name="jawaban[$no]" value="<?php echo $soal->pilihan_d ?> " ><?php echo $soal->pilihan_a ?><br>
+                                        <div class="radio ">
+                                        <label><input type="radio" name="jawaban[<?php echo $soal->id_soal ?>]" value="A" ><?php echo 'A. '.$soal->pilihan_a ?></label><br>
+                                        <label><input type="radio" name="jawaban[<?php echo $soal->id_soal ?>]" value="B" ><?php echo 'B. '.$soal->pilihan_b ?></label><br>
+                                        <label><input type="radio" name="jawaban[<?php echo $soal->id_soal ?>]" value="C" ><?php echo 'C. '.$soal->pilihan_c ?></label><br>
+                                        <label><input type="radio" name="jawaban[<?php echo $soal->id_soal ?>]" value="D" ><?php echo 'D. '.$soal->pilihan_d ?></label><br>
+                                        <label><input type="radio" name="jawaban[<?php echo $soal->id_soal ?>]" value="E" ><?php echo 'E. '.$soal->pilihan_e ?></label><br>
+                                        <p>Jawaban : <?php echo $soal->jawaban ?></p>
                                         </div>
                                     </div>
                                     <hr>
-                                    
-                                <?php endforeach ?>
+                                    <input type="hidden" name="id[]" value="<?php echo $soal->id_soal ?>">
+                                    <?php endforeach ?>
+                                    <div class="form-group">
+                                        <button type="submit" name="submit" class="btn btn-primary"  onclick="return confirm('Apakah Anda yakin dengan jawaban Anda?')">Proses</button>
+                                    </div>
+                                </form>
+                              </div>
                             </div>
                         </div>
                     </div>

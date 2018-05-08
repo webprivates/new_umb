@@ -15,41 +15,68 @@ class Soal extends CI_Controller
     }
 
     public function online(){
-        $jum_soal = $this->db->query(" SELECT * FROM tbl_soal ORDER BY id_soal ASC LIMIT 5  ")->result();
-        $m = '';
-        $min = '';
-        $jumlah = $this->db->query("SELECT * FROM tbl_soal ORDER BY id_soal DESC LIMIT 1  ")->result_array();
-        foreach ($jumlah as $key) {
-            $m = $key['id_soal'];
-        }
-        $jumlah = $this->db->query("SELECT * FROM tbl_soal ORDER BY id_soal ASC LIMIT 1  ")->result_array();
-        foreach ($jumlah as $key) {
-            $min = $key['id_soal'];
-        }
-
+        // METODE LCM
+        
+        //batas soal yang tampil
+        //$limit = $this->db->query(" SELECT * FROM tbl_soal ORDER BY id_soal ASC LIMIT 20  ")->result();
+        $jumlah = $this->db->query("SELECT * FROM tbl_soal ")->result();
+        
+        //ketentuan
+        $m = count($jumlah);
         $a = 11;
-        $c = 7;
-        $xn = '';
-        
-        for ($i=1; $i <= count($jum_soal); $i++) { 
-            $z0 = random_int($min, $m);
-            $xn = ($a * $z0 + $c) % $m; 
-        
-            if ($xn < $min) {
+        $c = 5;
+        $xn = 0;
+
+        $soal_data = array();
+        // for ($i=1; $i <= count($limit); $i++) {
+        for ($i=1; $i <= 10; $i++) { 
+            $r = random_int(1, $m);
+            //LCM
+            $xn = ($a * $r + $c) % $m; 
+            if ($xn < 0) {
                 $xn = $m;
             }
-            $data = $this->db->query(" SELECT * FROM tbl_soal WHERE id_soal ='$xn' ")->result();
-            foreach ($data as $soal) {
-                
-                echo "<pre>";
-                echo $i .'.'.$soal->pertanyaan. ' id.'. $soal->id_soal;
-                echo "</pre>";
+            $soals = $this->db->query(" SELECT * FROM tbl_soal WHERE id_soal ='$xn' ")->result();
+            
+            foreach ($soals as $soal) {
+                $soal_data[] = $soal;
+                // echo "<pre>";
+                // echo $i .'.'.$soal->pertanyaan. ' id.'. $soal->id_soal;
+                // echo "</pre>";
             }
         }
 
-        
+       $data = array('soal'=>$soal_data);
+       $this->template->load('template','soal_peserta/soal', $data);
+    }
 
-       // $this->template->load('template','soal_peserta/soal', $data);
+    public function cekJawaban(){
+        if (isset($_POST['submit'])) {
+            $jawaban = $this->input->post('jawaban');
+            $id_soal = $this->input->post('id');
+            $skor = 0;
+            $benar = 0;
+            $salah = 0;
+            $kosong = 0;
+
+            for ($i=0; $i < 10 ; $i++) { 
+                $nomor =$id_soal[$i];
+                if (!empty($pilihan[$nomor])) {
+                   $jawaban = $pilihan[$nomor];
+                   $check = $this->db->query(" SELECT * FROM tbl_soal WHERE id_soal = '$nomor' AND jawaban= '$jawaban' ")->result();
+                   if ($check) {
+                       $benar++;
+                   }else{
+                       $salah++;
+                   }
+                }else{
+                    $kosong++;
+                }
+            }
+            $jum_soal = count($this->Soal_model->get_all());
+           echo  $skor = 100/ $jum_soal * $benar;
+            // echo $hasil = number_format($skor, 1);
+        }
     }
 
     public function index()
