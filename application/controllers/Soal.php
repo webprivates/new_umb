@@ -11,6 +11,7 @@ class Soal extends CI_Controller
         //if($this->session->userdata('admin_logged_in')!=TRUE && $this->session->userdata('level')==='peserta' )  redirect('welcome');  
         $this->load->model('Soal_model');
         $this->load->model('Matauji_model');
+        $this->load->model('Ujian_model');
         $this->load->library('form_validation');
     }
 
@@ -52,12 +53,14 @@ class Soal extends CI_Controller
 
     public function cekJawaban(){
         if (isset($_POST['submit'])) {
-            $jawaban = $this->input->post('jawaban');
+            $pilihan = $this->input->post('pilihan');
             $id_soal = $this->input->post('id');
             $skor = 0;
             $benar = 0;
             $salah = 0;
             $kosong = 0;
+
+            // var_dump($id_soal);exit;
 
             for ($i=0; $i < 10 ; $i++) { 
                 $nomor =$id_soal[$i];
@@ -73,9 +76,30 @@ class Soal extends CI_Controller
                     $kosong++;
                 }
             }
-            $jum_soal = count($this->Soal_model->get_all());
-           echo  $skor = 100/ $jum_soal * $benar;
-            // echo $hasil = number_format($skor, 1);
+            
+            $jum_soal = $this->Soal_model->get_all();
+            //rumus skor
+            $skor = 100 / count($jum_soal) * $benar;
+            $nilai = number_format($skor, 1);
+            $status = '';
+            if ($nilai >= 70) {
+                $status = "Lulus";
+            }else{
+                $status = 'Tidak Lulus';
+            }
+
+            $data = array(
+                    'id_peserta' => $this->session->userdata('id_peserta'),
+                    'jumlah_benar' => $benar,
+                    'jumlah_salah' => $salah,
+                    'nilai' => $nilai,
+                    'status' => $status,
+            );
+            $this->Ujian_model->insert($data);
+            $this->session->set_flashdata('success', 'Terimakasih, Pemberitahuan kelulusan akan kami infokan melalui SMS.');
+            redirect('welcome');
+            
+            
         }
     }
 

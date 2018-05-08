@@ -35,10 +35,13 @@ Class Auth extends CI_Controller{
                 redirect('auth');
             }
         }elseif ($level === 'peserta') {
-            $check = $this->db->query("SELECT * FROM tbl_peserta WHERE email='$email' AND password= md5('$password') ")->result();
-            if (count($check) > 0) {
+            $check = $this->db->get_where('tbl_peserta', array('email'=>$email, 'password'=>md5($password)))->row();
+            //$check = $this->db->query("SELECT * FROM tbl_peserta WHERE email='$email' AND password= md5('$password') ")->result();
+            if ($check) {
                 $peserta = $check->nama_peserta;
+                $id_peserta = $check->id_peserta;
                 $this->session->set_userdata('peserta',$peserta);
+                $this->session->set_userdata('id_peserta',$id_peserta);
                 $this->session->set_userdata('level',$level);
                 redirect('welcome');
             }else{
