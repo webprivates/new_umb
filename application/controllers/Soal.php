@@ -16,6 +16,7 @@ class Soal extends CI_Controller
     }
 
     public function online(){
+        if(!$this->session->userdata('level')==='peserta' )  redirect('welcome');  
         // METODE LCM
         
         //batas soal yang tampil
